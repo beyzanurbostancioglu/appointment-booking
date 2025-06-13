@@ -14,6 +14,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/book', methods=['POST'])
+
 def book():
 
     name = request.form['name']
@@ -34,6 +35,13 @@ def book():
         flash('Please select a time in 30-minute intervals.')
         return redirect('/')
     conn = get_db_connection()
+    # Aynı tarih ve saatte randevu var mı kontrol et
+    existing = conn.execute('SELECT * FROM appointments WHERE date = ? AND time = ?', (date, time)).fetchone()
+    if existing:
+        conn.close()
+        flash('This time slot is already booked. Please choose another time.')
+        return redirect('/')
+
     conn.execute('INSERT INTO appointments (name, email, date, time) VALUES (?, ?, ?, ?)',
                  (name, email, date, time))
     conn.commit()
