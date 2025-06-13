@@ -37,6 +37,13 @@ def admin():
     appointments = conn.execute('SELECT * FROM appointments').fetchall()
     conn.close()
     return render_template('admin.html', appointments=appointments)
+@app.route('/delete/<int:id>', methods=['POST'])
+def delete(id):
+    conn = get_db_connection()
+    conn.execute('DELETE FROM appointments WHERE id = ?', (id,))
+    conn.commit()
+    conn.close()
+    return redirect('/admin')
 
 if __name__ == '__main__':
     conn = get_db_connection()
