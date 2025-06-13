@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-    <meta charset="UTF-8" />
-    <title>Appointment Booked</title>
+  <meta charset="UTF-8" />
+  <title>Appointment Confirmed</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1>Appointment successfully booked!</h1>
-    <a href="/">Back to Home</a>
+<body class="min-h-screen bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center p-8 text-white">
+  <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg p-12 max-w-md text-center shadow-lg">
+    <h1 class="text-4xl font-bold mb-6 drop-shadow-md">Your appointment has been booked!</h1>
+    <a href="/" class="inline-block px-6 py-3 bg-indigo-700 rounded-lg font-semibold hover:bg-indigo-900 transition">Back to Home</a>
+  </div>
 </body>
 </html>

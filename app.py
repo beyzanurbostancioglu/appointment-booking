@@ -3,18 +3,15 @@ import sqlite3
 
 app = Flask(__name__)
 
-# Veritabanı bağlantısı
 def get_db_connection():
     conn = sqlite3.connect('appointments.db')
     conn.row_factory = sqlite3.Row
     return conn
 
-# Anasayfa - Randevu formu
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Randevu kaydetme
 @app.route('/book', methods=['POST'])
 def book():
     name = request.form['name']
@@ -30,12 +27,10 @@ def book():
 
     return redirect('/success')
 
-# Başarı sayfası
 @app.route('/success')
 def success():
     return render_template('success.html')
 
-# Admin paneli - randevuları listele
 @app.route('/admin')
 def admin():
     conn = get_db_connection()
@@ -44,7 +39,6 @@ def admin():
     return render_template('admin.html', appointments=appointments)
 
 if __name__ == '__main__':
-    # Tablonun varlığını kontrol et, yoksa oluştur
     conn = get_db_connection()
     conn.execute('''
         CREATE TABLE IF NOT EXISTS appointments (
@@ -57,5 +51,4 @@ if __name__ == '__main__':
     ''')
     conn.commit()
     conn.close()
-
     app.run(debug=True)
