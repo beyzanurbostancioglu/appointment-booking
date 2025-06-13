@@ -10,8 +10,21 @@
 <body class="min-h-screen bg-gradient-to-tr from-purple-600 via-indigo-700 to-blue-600 flex items-center justify-center p-8">
   <div class="bg-white bg-opacity-90 backdrop-blur-lg rounded-xl shadow-xl max-w-md w-full p-8">
     <h1 class="text-4xl font-extrabold text-indigo-900 mb-6 text-center drop-shadow-lg">Book Your Appointment</h1>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
     <div id="errorMsg" class="hidden mb-4 text-red-600 font-semibold"></div>
+      <p class="mb-4 text-sm text-gray-600 italic">
+  Please select appointment times only in 30-minute intervals (e.g., 10:00, 10:30, 11:00).
+</p>
+
     <form id="appointmentForm" method="POST" action="/book" novalidate class="space-y-6">
       <input type="text" name="name" placeholder="Your Name"
              class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
@@ -22,8 +35,8 @@
       <input id="datePicker" type="text" name="date" placeholder="Select a date"
              class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
 
-      <input type="time" name="time"
-             class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
+      <input id="timePicker" type="time" name="time" step="1800" required
+       class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
 
       <button type="submit"
               class="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold shadow-md hover:bg-indigo-700 transition duration-300">

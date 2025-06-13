@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash
+from datetime import datetime
 import sqlite3
-
+import re
 app = Flask(__name__)
-
+app.secret_key = 'a1b2c3d4e5f6g7h8!'
 def get_db_connection():
     conn = sqlite3.connect('appointments.db')
     conn.row_factory = sqlite3.Row
@@ -14,11 +15,24 @@ def index():
 
 @app.route('/book', methods=['POST'])
 def book():
+
     name = request.form['name']
     email = request.form['email']
     date = request.form['date']
     time = request.form['time']
+    email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    if not re.match(email_pattern, email):
+        flash('Please enter a valid email address.')
+        return redirect('/')
+    try:
+        t = datetime.strptime(time, '%H:%M')
+    except ValueError:
+        flash('Invalid time format.')
+        return redirect('/')
 
+    if t.minute not in [0, 30]:
+        flash('Please select a time in 30-minute intervals.')
+        return redirect('/')
     conn = get_db_connection()
     conn.execute('INSERT INTO appointments (name, email, date, time) VALUES (?, ?, ?, ?)',
                  (name, email, date, time))
