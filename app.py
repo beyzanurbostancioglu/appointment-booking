@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, flash, session
+from flask import Flask, render_template, request, redirect, flash, session, url_for
 from datetime import datetime
 import sqlite3
 import re
 
 app = Flask(__name__)
-app.secret_key = 'a1b2c3d4e5f6g7h8!'
+app.secret_key = 'a1b2c3d4e5f6g7h8!'  # session ve flash için
 
 def get_db_connection():
     conn = sqlite3.connect('appointments.db')
@@ -22,8 +22,8 @@ def book():
     date = request.form['date']
     time = request.form['time']
 
-    # E-posta doğrulama
-    if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', email):
+    email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    if not re.match(email_pattern, email):
         flash('Please enter a valid email address.')
         return redirect('/')
 
@@ -65,11 +65,12 @@ def book():
 def success():
     return render_template('success.html')
 
-# ---------- ADMIN LOGIN ----------
+# --------- ADMIN LOGIN ---------
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
+        username = request.form.get('username') or 'admin'  # default admin kullanıcı
         password = request.form['password']
         if username == 'admin' and password == 'password123':
             session['admin_logged_in'] = True
@@ -94,12 +95,12 @@ def admin():
     conn.close()
     return render_template('admin.html', appointments=appointments)
 
-@app.route('/delete/<int:id>', methods=['POST'])
-def delete(id):
+@app.route('/delete/<int:appt_id>', methods=['POST'])
+def delete_appointment(appt_id):
     if not session.get('admin_logged_in'):
         return redirect('/login')
     conn = get_db_connection()
-    conn.execute('DELETE FROM appointments WHERE id = ?', (id,))
+    conn.execute('DELETE FROM appointments WHERE id = ?', (appt_id,))
     conn.commit()
     conn.close()
     flash('Appointment deleted successfully.')

@@ -27,8 +27,7 @@ A simple, responsive web-based appointment booking system built with **Flask** a
 1️⃣ **Clone the repository**
 
 ```bash
-git clone https://github.com/beyzanurbostancioglu/appointment-system.git
-cd appointment-system
+git clone https://github.com/beyzanurbostancioglu/appointment-booking.git
 ```
 
 2️⃣ **Install dependencies**
