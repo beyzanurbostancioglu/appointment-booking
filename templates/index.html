@@ -4,39 +4,60 @@
   <meta charset="UTF-8" />
   <title>Book Your Appointment</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
 </head>
-<body class="min-h-screen bg-gradient-to-tr from-purple-600 via-indigo-700 to-blue-600 flex items-center justify-center p-8">
+
+<body class="font-poppins min-h-screen bg-gradient-to-tr from-purple-600 via-indigo-700 to-blue-600 flex items-center justify-center p-8">
+
   <div class="bg-white bg-opacity-90 backdrop-blur-lg rounded-xl shadow-xl max-w-md w-full p-8">
-    <h1 class="text-4xl font-extrabold text-indigo-900 mb-6 text-center drop-shadow-lg">Book Your Appointment</h1>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
-      {% for message in messages %}
-        <p>{{ message }}</p>
-      {% endfor %}
+    <h1 class="text-3xl font-extrabold text-indigo-800 mb-6 text-center">Book Your Appointment</h1>
+
+    <!-- Admin Login link -->
+    <div class="text-right mb-4">
+      <a href="/login" class="text-sm text-indigo-600 hover:underline">Admin Login</a>
     </div>
-  {% endif %}
-{% endwith %}
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="mb-4 p-3 bg-red-100 text-red-700 rounded">
+          {% for message in messages %}
+            <p>{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 
     <div id="errorMsg" class="hidden mb-4 text-red-600 font-semibold"></div>
-      <p class="mb-4 text-sm text-gray-600 italic">
-  Please select appointment times only in 30-minute intervals (e.g., 10:00, 10:30, 11:00).
-</p>
 
-    <form id="appointmentForm" method="POST" action="/book" novalidate class="space-y-6">
+    <p class="mb-4 text-sm text-gray-600 italic">
+      Please select appointment times only in 30-minute intervals (e.g., 10:00, 10:30, 11:00).
+    </p>
+
+    <form id="appointmentForm" method="POST" action="/book" novalidate class="space-y-4">
       <input type="text" name="name" placeholder="Your Name"
-             class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
+             class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
 
       <input type="email" name="email" placeholder="Your Email"
-             class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
+             class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
 
       <input id="datePicker" type="text" name="date" placeholder="Select a date"
-             class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
+             class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
 
-      <input id="timePicker" type="time" name="time" step="1800" required
-       class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
+      <input id="timePicker" type="time" name="time" step="1800" required placeholder="Select time"
+             class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
 
       <button type="submit"
               class="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold shadow-md hover:bg-indigo-700 transition duration-300">
@@ -50,6 +71,16 @@
       dateFormat: "Y-m-d",
       locale: "default",
       minDate: "today"
+    });
+
+    flatpickr("#timePicker", {
+      enableTime: true,
+      noCalendar: true,
+      dateFormat: "H:i",
+      time_24hr: true,
+      minuteIncrement: 30,
+      minTime: "09:00",
+      maxTime: "18:00"
     });
 
     const form = document.getElementById('appointmentForm');
@@ -71,7 +102,6 @@
         return;
       }
 
-
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(email)) {
         e.preventDefault();
@@ -79,7 +109,23 @@
         errorMsg.classList.remove('hidden');
         return;
       }
+
+      const [hour, minute] = time.split(':').map(Number);
+      if (minute !== 0 && minute !== 30) {
+        e.preventDefault();
+        errorMsg.textContent = "Please select a time in 30-minute intervals.";
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+
+      if (hour < 9 || hour > 18 || (hour === 18 && minute > 0)) {
+        e.preventDefault();
+        errorMsg.textContent = "Please select a time between 09:00 and 18:00.";
+        errorMsg.classList.remove('hidden');
+        return;
+      }
     });
   </script>
+
 </body>
 </html>
