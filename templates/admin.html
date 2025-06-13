@@ -1,41 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Panel - Appointments</title>
+  <title>Admin - View Appointments</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700 p-8 text-white">
-  <div class="max-w-6xl mx-auto bg-white bg-opacity-10 backdrop-blur-md rounded-xl p-8 shadow-lg">
-    <h1 class="text-5xl font-extrabold mb-8 text-center drop-shadow-lg">Appointments List</h1>
-    <div class="overflow-x-auto">
-      <table class="min-w-full bg-white rounded-lg shadow-md overflow-hidden text-gray-900">
-        <thead>
-          <tr class="bg-indigo-600 text-white">
-            <th class="text-left py-3 px-6 font-semibold">ID</th>
-            <th class="text-left py-3 px-6 font-semibold">Name</th>
-            <th class="text-left py-3 px-6 font-semibold">Email</th>
-            <th class="text-left py-3 px-6 font-semibold">Date</th>
-            <th class="text-left py-3 px-6 font-semibold">Time</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for appointment in appointments %}
-          <tr class="border-b border-gray-200 hover:bg-indigo-50 cursor-pointer transition duration-300">
-            <td class="py-4 px-6">{{ appointment.id }}</td>
-            <td class="py-4 px-6">{{ appointment.name }}</td>
-            <td class="py-4 px-6">{{ appointment.email }}</td>
-            <td class="py-4 px-6">{{ appointment.date }}</td>
-            <td class="py-4 px-6">{{ appointment.time }}</td>
-          </tr>
-          {% else %}
-          <tr>
-            <td colspan="5" class="py-4 px-6 text-center">No appointments found.</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+<body class="min-h-screen bg-gradient-to-tr from-gray-700 via-gray-800 to-black flex items-center justify-center p-8">
+  <div class="bg-white bg-opacity-90 backdrop-blur-lg rounded-xl shadow-xl max-w-4xl w-full p-8">
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-6 text-center drop-shadow-lg">All Appointments</h1>
+    <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="px-4 py-2 text-left">Name</th>
+          <th class="px-4 py-2 text-left">Email</th>
+          <th class="px-4 py-2 text-left">Date</th>
+          <th class="px-4 py-2 text-left">Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appointment in appointments %}
+        <tr class="border-b border-gray-300">
+          <td class="px-4 py-2">{{ appointment['name'] }}</td>
+          <td class="px-4 py-2">{{ appointment['email'] }}</td>
+          <td class="px-4 py-2">{{ appointment['date'] }}</td>
+          <td class="px-4 py-2">{{ appointment['time'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 </body>
 </html>

@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Flatpickr CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet" />
-  <!-- Flatpickr JS -->
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
   <meta charset="UTF-8" />
   <title>Book Your Appointment</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body class="min-h-screen bg-gradient-to-tr from-purple-600 via-indigo-700 to-blue-600 flex items-center justify-center p-8">
   <div class="bg-white bg-opacity-90 backdrop-blur-lg rounded-xl shadow-xl max-w-md w-full p-8">
     <h1 class="text-4xl font-extrabold text-indigo-900 mb-6 text-center drop-shadow-lg">Book Your Appointment</h1>
-    <form method="POST" action="/book" class="space-y-6">
-      <input type="text" name="name" placeholder="Your Name" required
-             class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
-      <input type="email" name="email" placeholder="Your Email" required
+
+    <div id="errorMsg" class="hidden mb-4 text-red-600 font-semibold"></div>
+    <form id="appointmentForm" method="POST" action="/book" novalidate class="space-y-6">
+      <input type="text" name="name" placeholder="Your Name"
              class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
 
-      <input id="datePicker" type="text" name="date" placeholder="Select a date" required
+      <input type="email" name="email" placeholder="Your Email"
              class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
 
-      <input type="time" name="time" required
+      <input id="datePicker" type="text" name="date" placeholder="Select a date"
              class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
+
+      <input type="time" name="time"
+             class="w-full px-5 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-4 focus:ring-indigo-400 transition" />
+
       <button type="submit"
               class="w-full py-3 bg-indigo-600 text-white rounded-lg font-semibold shadow-md hover:bg-indigo-700 transition duration-300">
         Book Appointment
@@ -31,12 +32,40 @@
     </form>
   </div>
 
-  <!-- Flatpickr başlatma kodu, body sonunda -->
   <script>
     flatpickr("#datePicker", {
       dateFormat: "Y-m-d",
       locale: "default",
       minDate: "today"
+    });
+
+    const form = document.getElementById('appointmentForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', function(e) {
+      errorMsg.classList.add('hidden');
+      errorMsg.textContent = '';
+
+      const name = this.name.value.trim();
+      const email = this.email.value.trim();
+      const date = this.date.value.trim();
+      const time = this.time.value.trim();
+
+      if (!name || !email || !date || !time) {
+        e.preventDefault();
+        errorMsg.textContent = "Please fill in all fields.";
+        errorMsg.classList.remove('hidden');
+        return;
+      }
+
+
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        e.preventDefault();
+        errorMsg.textContent = "Please enter a valid email address.";
+        errorMsg.classList.remove('hidden');
+        return;
+      }
     });
   </script>
 </body>
