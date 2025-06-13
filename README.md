@@ -5,7 +5,11 @@ A simple, responsive web-based appointment booking system built with **Flask** a
 
 
 ---
+## 🚀 Live Demo
 
+👉 [View the App](https://appointment-booking-q0ca.onrender.com)
+
+---
 ## 📌 Features
 
 - 📅 **Book an appointment easily**
